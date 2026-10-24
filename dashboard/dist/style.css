@@ -1,0 +1,31 @@
+/* Hermes Companion Pair tab styles. Theme variables only — no hard-coded
+ * palette, so the tab follows the dashboard theme. */
+.cp-wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+.cp-title { font-size: 1.4em; margin-bottom: 4px; }
+.cp-lead { color: var(--color-muted-foreground, #888); margin-bottom: 12px; }
+.cp-status { font-size: 0.9em; color: var(--color-muted-foreground, #888); }
+.cp-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--color-border, #444);
+  background: var(--color-primary, #2a6); color: var(--color-primary-foreground, #fff);
+  cursor: pointer; margin-right: 8px; }
+.cp-btn:disabled { opacity: 0.5; cursor: default; }
+.cp-btn-secondary { background: transparent; color: inherit; }
+.cp-btn-danger { background: transparent; color: var(--color-destructive, #c33); }
+.cp-error { background: rgba(200, 60, 60, 0.15); border: 1px solid #c33;
+  padding: 8px 12px; border-radius: 8px; margin: 12px 0; }
+.cp-hidden { display: none; }
+.cp-offer { border: 1px solid var(--color-border, #444); border-radius: 12px;
+  padding: 16px; margin: 16px 0; }
+.cp-qr svg { max-width: 320px; height: auto; background: #fff; padding: 8px; border-radius: 8px; }
+.cp-countdown { font-weight: bold; }
+.cp-warning { background: rgba(220, 160, 0, 0.15); border: 1px solid #da0;
+  padding: 8px 12px; border-radius: 8px; }
+.cp-payload { white-space: pre-wrap; word-break: break-all; font-size: 0.8em;
+  background: rgba(128, 128, 128, 0.12); padding: 12px; border-radius: 8px; }
+.cp-subtitle { margin-top: 24px; }
+.cp-device { display: flex; gap: 12px; align-items: center;
+  border-bottom: 1px solid var(--color-border, #444); padding: 8px 0; }
+.cp-device-name { font-weight: bold; }
+.cp-device-meta { flex: 1; font-size: 0.85em; color: var(--color-muted-foreground, #888); }
+.cp-empty { color: var(--color-muted-foreground, #888); }
+.cp-success { background: rgba(60, 180, 90, 0.15); border: 1px solid #3b5;
+  padding: 8px 12px; border-radius: 8px; }
