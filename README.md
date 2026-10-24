@@ -25,7 +25,7 @@ No extra daemon, no cloud relay, no account. Public plugin APIs only.
   supervision, logged, with a config opt-out), so pairing works when you
   pick up your phone — not only right after you've started things by hand.
 
-## One honest limitation
+## limitation
 
 Hermes's gateway authenticates with a **single `API_SERVER_KEY`** — there is
 no per-device key system in the gateway itself. A paired phone therefore
