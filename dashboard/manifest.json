@@ -1,0 +1,1 @@
+{"api":"plugin_api.py","bundle":"dist/index.js","description":"Pair phones to this Hermes host with one QR scan; manage paired devices.","icon":"QrCode","label":"Companion","name":"hermes-companion-pair","tab":{"path":"/companion","position":"after:pairing"},"version":"0.1.0"}
