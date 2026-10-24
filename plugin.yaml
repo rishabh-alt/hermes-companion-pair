@@ -8,7 +8,7 @@ description: |
 author: Rishab Deol
 license: MIT
 homepage: https://github.com/rishabh-alt/hermes-companion-pair
-capabilities:
-  - process-spawn: dashboard supervision (spec §5.6) — probe-before-spawn,
-    logged, config opt-out; the robust alternative is the shipped
-    launchd/systemd user unit installed via `hermes companion install-service`.
+# NOTE: process-spawning for dashboard supervision (spec §5.6) is declared
+# in README/NOTES for now; it returns to this manifest once the
+# `hermes plugins validate` schema for capabilities is confirmed, so the
+# manifest stays parseable on every Hermes version in the 0.20.0-0.22.x floor.
