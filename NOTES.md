@@ -77,3 +77,41 @@ verification on Hermes 0.22.2 remains the final proof for Q1.
   print the payload/path instead of opening a browser; regenerate command
   for address changes. Peer's security model (long-lived key inside the QR)
   is NOT adopted — ours stays one-time secret → per-device credential.
+
+## v1 implemented (2026-10-24)
+
+- Store: SQLite in the plugin data dir (`offers`, `devices`, `sessions`
+  tables); secrets hashed at rest, never logged.
+- Redeem: `POST /companion/redeem` on the gateway api_server via
+  `ctx.register_platform_handler("api_server", ...)` (Mechanism D).
+- Dashboard sessions: `CompanionAuthProvider` (`companion`) via
+  `ctx.register_dashboard_auth_provider()` — password seam
+  (device_id + credential -> session) and token seam (bearer credential
+  -> TokenPrincipal). Framework shapes follow
+  `hermes_cli/dashboard_auth/base.py`; if that module is missing on an
+  older host, local dataclasses with identical field names are used and
+  registration degrades to a warning, never a crash.
+- CLI: `hermes companion pair|qr|devices|revoke|dashboard|install-service`.
+- Dashboard tab: `dashboard/plugin_api.py` (FastAPI router) +
+  hand-written vanilla-JS IIFE `dashboard/dist/index.js` (no build step)
+  + `dist/style.css` (theme vars only).
+- Dashboard API mount follows the manifest name:
+  `/api/plugins/hermes-companion-pair/*` (spec section 5.2's
+  `/api/plugins/companion-pair/` shorthand is superseded by the
+  `<name>` rule and the shipped achievements example).
+- Dashboard tab path is `/companion-pair` at position `after:skills`
+  (spec section 5.1); if the tab does not appear on a host, the anchor
+  is the first thing to check.
+- Redeem error codes: unknown pair_id and wrong secret both answer
+  `pairing_invalid` (no oracle); already-redeemed answers
+  `pairing_used`; expired answers `pairing_expired`. The used/expired
+  states describe the *offer*, not the secret, and match the companion
+  app's section 8.5 messages.
+- QR encoder is hand-rolled (byte mode, EC level M, fixed mask 0) and
+  verified module-for-module against the reference `qrcode` library on
+  8 payloads including a realistic 463-byte pairing payload.
+- NOT yet verified without a live Hermes (tested on the user's Mac
+  next): redeem route answering on a real gateway, auth provider
+  session flow through the real dashboard middleware, tab rendering
+  inside the real dashboard (the IIFE's register/mount assumptions are
+  documented in the file), supervision spawn on a real gateway start.
