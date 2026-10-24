@@ -1,5 +1,5 @@
 name: hermes-companion-pair
-version: "0.1.0"
+version: "1.0.0"
 description: |
   One-scan QR pairing for Hermes Agent: pair your phone to your Hermes host
   with a single QR scan. Issues per-device revocable credentials, adds a
