@@ -1,0 +1,14 @@
+name: hermes-companion-pair
+version: "0.1.0"
+description: |
+  One-scan QR pairing for Hermes Agent: pair your phone to your Hermes host
+  with a single QR scan. Issues per-device revocable credentials, adds a
+  dashboard Companion tab and `hermes companion` CLI commands. No extra
+  daemon, no cloud relay.
+author: Rishab Deol
+license: MIT
+homepage: https://github.com/rishabh-alt/hermes-companion-pair
+capabilities:
+  - process-spawn: dashboard supervision (spec §5.6) — probe-before-spawn,
+    logged, config opt-out; the robust alternative is the shipped
+    launchd/systemd user unit installed via `hermes companion install-service`.
