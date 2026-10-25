@@ -170,3 +170,20 @@ verification on Hermes 0.22.2 remains the final proof for Q1.
   @hermes/plugin-sdk in this VM): page load, sidebar entry
   appearance, ctx.rest routing, QR scannability — all belong to the
   live test on the user's Mac.
+
+## Web tab blank fix (2026-10-25)
+
+- Symptom on the user's Mac: the web dashboard Companion tab was
+  registered in navigation but rendered blank.
+- Root cause: dashboard/dist/index.js registered an object
+  { mount, render } with window.__HERMES_PLUGINS__ and fell back to
+  searching for container elements the dashboard never creates. The
+  mount contract was inferred, not verified.
+- Verified contract from a working dashboard tab plugin
+  (stainlu/hermes-labyrinth, dashboard/dist/index.js, line 4290):
+  window.__HERMES_PLUGINS__.register(name, Component) with a React
+  component, React taken from window.__HERMES_PLUGIN_SDK__.React.
+  dashboard/dist/index.js was rewritten to that contract (React,
+  no JSX, no build step; same UI, API base, and class names).
+  node --check passes. Live tab rendering still belongs to the
+  user's Mac test (hard-refresh the dashboard tab after update).
