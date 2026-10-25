@@ -115,3 +115,58 @@ verification on Hermes 0.22.2 remains the final proof for Q1.
   session flow through the real dashboard middleware, tab rendering
   inside the real dashboard (the IIFE's register/mount assumptions are
   documented in the file), supervision spawn on a real gateway start.
+
+## v2 — desktop sidebar page (2026-10-25)
+
+- New file: `desktop/plugin.js` (single hand-written file, no npm
+  toolchain, no build step — same rule as the web dashboard tab).
+  It renders the Companion pairing UI natively in the Hermes desktop
+  app: Pair button, QR display, countdown, copy-payload, device list
+  with revoke, dashboard status line. Behavior mirrors
+  `dashboard/dist/index.js`; the web tab stays as the fallback for
+  headless/web users.
+- Mechanism, proven from the peer plugin PIR8-Software/Hermes-OR-Picker
+  (`catalog/desktop/plugin.js`, 71KB): a JS module importing
+  ROUTES_AREA, SIDEBAR_NAV_AREA, PALETTE_AREA, host from
+  '@hermes/plugin-sdk' plus { jsx, jsxs } from 'react/jsx-runtime'
+  and hooks from 'react', with a default export { id, name,
+  defaultEnabled: true, register(ctx) { ctx.registerMany([...]) } }.
+  Our page registers: page at path '/companion-pair' (same path as
+  the web tab), sidebar entry { label: 'Companion', codicon: 'key' },
+  palette command 'Open Companion Pairing' (host.navigate(PAGE)).
+- Backend calls use ctx.rest with plugin-relative paths, exactly the
+  OR Picker convention (its api() helper: ctx.rest(path, { method,
+  timeoutMs, body }); call sites use '/models', '/credits', …).
+  Our page calls '/offers' (POST), '/devices' (GET),
+  '/devices/{id}' (DELETE), '/dashboard-status' (GET) — the same
+  routes dashboard/plugin_api.py already serves. One honest gap:
+  whether the desktop SDK's ctx.rest proxy targets the dashboard
+  plugin_api mount is inferred from OR Picker's shape, not proven
+  against a live host; if the page's calls 404 on first run, the fix
+  is centralized in the file's api() helper (one line).
+- Discovery (from OR Picker's install.sh, NOT assumed): the desktop
+  app loads desktop plugins from
+  $HERMES_HOME/desktop-plugins/<plugin-id>/plugin.js, and the user
+  reloads via Cmd/Ctrl+K → Reload desktop plugins. `hermes plugins
+  update` does NOT install the sidebar page; activation needs:
+    mkdir -p ~/.hermes/desktop-plugins/hermes-companion-pair
+    cp desktop/plugin.js ~/.hermes/desktop-plugins/hermes-companion-pair/plugin.js
+  Whether the desktop app ALSO auto-discovers a desktop/ entry inside
+  the installed plugin directory is UNCONFIRMED.
+- QR square guarantee (the web tab's unscannable QR is the open bug
+  this page must not repeat): the backend SVG already has a square
+  viewBox and white background rect; this page additionally forces
+  equal width/height attributes (320×320) and equal CSS dimensions,
+  pins preserveAspectRatio, renders inside a fixed 320×320 box on a
+  white background, and applies no CSS filter near the element.
+  The web tab's QR bug is deliberately NOT fixed here — it stays
+  open pending the user's answer about which surface produced it.
+- Verification in the VM: node --check passes (the file uses
+  jsx()/jsxs() calls, zero JSX angle-bracket literals, so the check
+  is a real syntax pass); braces/parens/brackets balanced; all three
+  registration areas present with consistent paths/labels; zero raw
+  fetch calls (ctx.rest only); zero console.* lines (no secret
+  logging). NOT verified without a real desktop app (no
+  @hermes/plugin-sdk in this VM): page load, sidebar entry
+  appearance, ctx.rest routing, QR scannability — all belong to the
+  live test on the user's Mac.
