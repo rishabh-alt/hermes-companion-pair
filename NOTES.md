@@ -187,3 +187,24 @@ verification on Hermes 0.22.2 remains the final proof for Q1.
   no JSX, no build step; same UI, API base, and class names).
   node --check passes. Live tab rendering still belongs to the
   user's Mac test (hard-refresh the dashboard tab after update).
+
+## install.sh (2026-10-25, corrected from Argon's draft)
+
+- Argon's draft copied core/, cli/, gateway/ — directories that do
+  not exist in this repo — and never installed companion_pairing/
+  (the real package: cli.py, gateway_config.py, redeem.py, store.py,
+  etc.). Installed from that draft, the plugin would be broken on
+  arrival. The committed install.sh installs the real layout:
+  plugin.yaml, __init__.py, LICENSE, companion_pairing/,
+  dashboard/; desktop/plugin.js goes only to desktop-plugins/.
+- Argon's draft also rewrote config.yaml via a YAML load/dump with
+  no backup. The committed script does NOT rewrite configs (Hermes
+  owns that schema); it prints the `hermes plugins enable` step and
+  the secondary-profile check instead.
+- install.sh is safe to run from a repo clone OR from the install
+  dir itself (after `hermes plugins update`): same-file copies are
+  skipped, and the desktop page is copied BEFORE the agent-side
+  desktop/ dir is removed. bash -n clean, ASCII only.
+- Post-update caveat (do not forget): `hermes plugins update`
+  re-syncs the repo (including desktop/) into the install dir, so
+  re-run install.sh after every update or the marker trap returns.
